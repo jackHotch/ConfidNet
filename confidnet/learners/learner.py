@@ -1,14 +1,19 @@
 import os
 
+
 import torch
 import torch.optim as optim
+
 
 from confidnet.models import get_model
 from confidnet.utils import losses
 from confidnet.utils.logger import get_logger
 from confidnet.utils.schedulers import get_scheduler
 
+
 LOGGER = get_logger(__name__, level="DEBUG")
+
+
 
 
 class AbstractLeaner:
@@ -56,7 +61,6 @@ class AbstractLeaner:
         self.device = device
         self.last_epoch = start_epoch - 2
         self.criterion, self.scheduler, self.optimizer, self.tb_logger = None, None, None, None
-
         # Initialize model
         self.model = get_model(config_args, self.device).to(self.device)
         # Set optimizer
@@ -66,8 +70,10 @@ class AbstractLeaner:
         # Temperature scaling
         self.temperature = config_args["training"].get("temperature", None)
 
+
     def train(self, epoch):
         pass
+
 
     def set_loss(self):
         if self.loss_args["name"] in losses.CUSTOM_LOSS:
@@ -79,6 +85,7 @@ class AbstractLeaner:
         else:
             raise Exception(f"Loss {self.loss_args['name']} not implemented")
         LOGGER.info(f"Using loss {self.loss_args['name']}")
+
 
     def set_optimizer(self, optimizer_name):
         optimizer_params = {
@@ -94,11 +101,14 @@ class AbstractLeaner:
         else:
             raise KeyError("Bad optimizer name or not implemented (sgd, adam, adadelta).")
 
+
     def set_scheduler(self):
         self.scheduler = get_scheduler(self.optimizer, self.lr_schedule, self.last_epoch)
 
+
     def load_checkpoint(self, state_dict, strict=True):
         self.model.load_state_dict(state_dict, strict=strict)
+
 
     def save_checkpoint(self, epoch):
         torch.save(
@@ -112,17 +122,24 @@ class AbstractLeaner:
             self.output_folder / f"model_epoch_{epoch:03d}.ckpt",
         )
 
+
     def save_tb(self, logs_dict):
         # ================================================================== #
         #                        Tensorboard Logging                         #
         # ================================================================== #
 
+
         # 1. Log scalar values (scalar summary)
         epoch = logs_dict["epoch"]["value"]
         del logs_dict["epoch"]
 
+
         for tag in logs_dict:
-            self.tb_logger.scalar_summary(tag, logs_dict[tag]["value"], epoch)
+            value = logs_dict[tag]["value"]
+            if isinstance(value, torch.Tensor):
+                value = value.detach().cpu().numpy()
+            self.tb_logger.scalar_summary(tag, value, epoch)
+
 
         # 2. Log values and gradients of the parameters (histogram summary)
         for tag, value in self.model.named_parameters():
@@ -130,3 +147,5 @@ class AbstractLeaner:
             self.tb_logger.histo_summary(tag, value.data.cpu().numpy(), epoch)
             if not value.grad is None:
                 self.tb_logger.histo_summary(tag + "/grad", value.grad.data.cpu().numpy(), epoch)
+
+
