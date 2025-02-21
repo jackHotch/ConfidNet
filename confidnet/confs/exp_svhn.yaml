@@ -9,7 +9,7 @@ data:
 
 # Training parameters
 training:
-    output_folder: /share/DEEPLEARNING/ccorbiere/logs/cifar10/test/cifar10_trustscore_baseline_pretrained
+    output_folder: /content/output-svhn/
     task: classification
     learner: default
     nb_epochs: 100
