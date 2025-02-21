@@ -9,7 +9,7 @@ data:
 
 # Training parameters
 training:
-    output_folder: /home/docker_user/shared/ccorbiere/logs/test/camvid_baseline_pretrained
+    output_folder: /content/output-camvid/
     task: segmentation
     learner: default
     nb_epochs: 500
