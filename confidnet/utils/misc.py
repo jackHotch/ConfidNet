@@ -6,17 +6,8 @@ import torch
 import yaml
 
 
-def one_hot_embedding(labels, num_classes):
-    """Embedding labels to one-hot form.
-
-    Args:
-      labels: (LongTensor) class labels, sized [N,].
-      num_classes: (int) number of classes.
-
-    Returns:
-      (tensor) encoded labels, sized [N, #classes].
-    """
-    y = torch.eye(num_classes)
+def one_hot_embedding(labels, num_classes, device=None):
+    y = torch.eye(num_classes, device=labels.device)  # Move y to the same device as labels
     return y[labels]
 
 
