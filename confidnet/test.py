@@ -1,9 +1,11 @@
 import argparse
 from pathlib import Path
 
+
 import numpy as np
 import torch
 from tqdm import tqdm
+
 
 from confidnet.loaders import get_loader
 from confidnet.learners import get_learner
@@ -13,10 +15,14 @@ from confidnet.utils.logger import get_logger
 from confidnet.utils.metrics import Metrics
 from confidnet.utils.misc import load_yaml
 
+
 LOGGER = get_logger(__name__, level="DEBUG")
+
 
 MODE_TYPE = ["mcp", "tcp", "mc_dropout", "trust_score", "confidnet"]
 MAX_NUMBER_TRUSTSCORE_SEG = 3000
+
+
 
 
 def main():
@@ -39,10 +45,13 @@ def main():
     )
     args = parser.parse_args()
 
+
     config_args = load_yaml(args.config_path)
+
 
     # Overwrite for release
     config_args["training"]["output_folder"] = Path(args.config_path).parent
+
 
     config_args["training"]["metrics"] = [
         "accuracy",
@@ -55,19 +64,24 @@ def main():
     if config_args["training"]["task"] == "segmentation":
         config_args["training"]["metrics"].append("mean_iou")
 
+
     # Special case of MC Dropout
     if args.mode == "mc_dropout":
         config_args["training"]["mc_dropout"] = True
 
+
     # Device configuration
     device = torch.device("cuda" if torch.cuda.is_available() and not args.no_cuda else "cpu")
+
 
     # Load dataset
     LOGGER.info(f"Loading dataset {config_args['data']['dataset']}")
     dloader = get_loader(config_args)
 
+
     # Make loaders
     dloader.make_loaders()
+
 
     # Set learner
     LOGGER.warning(f"Learning type: {config_args['training']['learner']}")
@@ -75,13 +89,16 @@ def main():
         config_args, dloader.train_loader, dloader.val_loader, dloader.test_loader, -1, device
     )
 
+
     # Initialize and load model
     ckpt_path = config_args["training"]["output_folder"] / f"model_epoch_{args.epoch:03d}.ckpt"
     checkpoint = torch.load(ckpt_path)
     learner.model.load_state_dict(checkpoint["model_state_dict"])
 
+
     # Get scores
     LOGGER.info(f"Inference mode: {args.mode}")
+
 
     if args.mode != "trust_score":
         _, scores_test = learner.evaluate(
@@ -93,6 +110,7 @@ def main():
             verbose=True,
         )
 
+
     # Special case TrustScore
     else:
         # For segmentation, reduce number of samples, else it is too long to compute
@@ -100,6 +118,7 @@ def main():
             learner.prod_test_len = MAX_NUMBER_TRUSTSCORE_SEG * np.ceil(
                 learner.nsamples_test / config_args["training"]["batch_size"]
             )
+
 
         # Create feature extractor model
         config_args["model"]["name"] = config_args["model"]["name"] + "_extractor"
@@ -109,6 +128,7 @@ def main():
         features_extractor.print_summary(
             input_size=tuple([shape_i for shape_i in learner.train_loader.dataset[0][0].shape])
         )
+
 
         # Get features for KDTree
         LOGGER.info("Get features for KDTree")
@@ -144,11 +164,13 @@ def main():
         train_features = torch.cat(train_features).detach().cpu().numpy()
         train_target = torch.cat(train_target).detach().cpu().numpy()
 
+
         LOGGER.info("Create KDTree")
         trust_model = trust_scores.TrustScore(
             num_workers=max(config_args["data"]["num_classes"], 20)
         )
         trust_model.fit(train_features, train_target)
+
 
         LOGGER.info("Execute on test set")
         test_features, test_pred = [], []
@@ -160,6 +182,7 @@ def main():
                 output = learner.model(data)
                 confidence, pred = output.max(dim=1, keepdim=True)
                 features = features_extractor(data)
+
 
                 if config_args["training"]["task"] == "segmentation":
                     features = (
@@ -190,9 +213,11 @@ def main():
                 else:
                     features = features.view(features.size(0), -1)
 
+
                 test_features.append(features)
                 test_pred.append(pred)
                 metrics.update(pred, target, confidence)
+
 
         test_features = torch.cat(test_features).detach().to("cpu").numpy()
         test_pred = torch.cat(test_pred).squeeze().detach().to("cpu").numpy()
@@ -200,12 +225,15 @@ def main():
         metrics.proba_pred = proba_pred
         scores_test = metrics.get_scores(split="test")
 
+
     LOGGER.info("Results")
     print("----------------------------------------------------------------")
     for st in scores_test:
         print(st)
         print(scores_test[st])
         print("----------------------------------------------------------------")
+
+
 
 
 if __name__ == "__main__":
