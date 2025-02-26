@@ -40,7 +40,8 @@ training:
 # Model parameters
 model:
     name: segnet
-    resume: vgg16
+    resume: /content/output-camvid/model_epoch_500.ckpt
+    uncertainty: /content/output-camvid/model_epoch_500.ckpt
     is_deconv: True
     is_batchnorm: True
     is_dropout: True
