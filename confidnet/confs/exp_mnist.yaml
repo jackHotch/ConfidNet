@@ -33,7 +33,8 @@ training:
 # Model parameters
 model:
     name: mlp
-    resume:
+    resume: /content/output-mnist/model_epoch_100.ckpt
+    uncertainty: /content/output-mnist/model_epoch_100.ckpt
     hidden_size: 1000
     is_dropout: True
 
