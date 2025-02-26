@@ -133,11 +133,25 @@ class DefaultLearner(AbstractLeaner):
 
 
               elif mode == "mc_dropout":
-                  outputs = torch.zeros(samples, *data.shape[:2], *data.shape[2:]).to(self.device)
+                  if self.task == "classification":
+                      outputs = torch.zeros(
+                          samples, data.shape[0], self.num_classes
+                      ).to(self.device)
+                  elif self.task == "segmentation":
+                      outputs = torch.zeros(
+                          samples,
+                          data.shape[0],
+                          self.num_classes,
+                          data.shape[2],
+                          data.shape[3],
+                      ).to(self.device)
                   for i in range(samples):
                       outputs[i] = self.model(data)
                   output = outputs.mean(0)
-                  loss += self.criterion(output, target)
+                  if self.task == "classification":
+                      loss += self.criterion(output, target)
+                  elif self.task == "segmentation":
+                      loss += self.criterion(output, target.squeeze(dim=1))
                   probs = F.softmax(output, dim=1)
                   confidence = (probs * torch.log(probs + 1e-9)).sum(dim=1)  # entropy
                   pred = probs.max(dim=1, keepdim=True)[1]
