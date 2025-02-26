@@ -2,8 +2,10 @@ import argparse
 import os
 from shutil import copyfile, rmtree
 
+
 import click
 import torch
+
 
 from confidnet.loaders import get_loader
 from confidnet.learners import get_learner
@@ -11,7 +13,10 @@ from confidnet.utils.logger import get_logger
 from confidnet.utils.misc import load_yaml
 from confidnet.utils.tensorboard_logger import TensorboardLogger
 
+
 LOGGER = get_logger(__name__, level="DEBUG")
+
+
 
 
 def main():
@@ -29,9 +34,11 @@ def main():
     )
     args = parser.parse_args()
 
+
     config_args = load_yaml(args.config_path)
     # Device configuration
     device = torch.device("cuda" if torch.cuda.is_available() and not args.no_cuda else "cpu")
+
 
     # Start from scatch or resume existing model and optim
     if config_args["training"]["output_folder"].exists():
@@ -58,12 +65,15 @@ def main():
         os.mkdir(config_args["training"]["output_folder"])
         start_epoch = 1
 
+
     # Load dataset
     LOGGER.info(f"Loading dataset {config_args['data']['dataset']}")
     dloader = get_loader(config_args)
 
+
     # Make loaders
     dloader.make_loaders()
+
 
     # Set learner
     LOGGER.warning(f"Learning type: {config_args['training']['learner']}")
@@ -75,6 +85,7 @@ def main():
         start_epoch,
         device,
     )
+
 
     # Resume existing model or from pretrained one
     if start_epoch > 1:
@@ -92,11 +103,12 @@ def main():
                 LOGGER.warning("Cloning training phase")
                 learner.load_checkpoint(
                     pretrained_checkpoint["model_state_dict"],
-                    torch.load(uncertainty_checkpoint)["model_state_dict"],
-                    strict=False,
+                    torch.load(uncertainty_checkpoint)["model_state_dict"]#,
+                    #strict=False,
                 )
             else:
                 learner.load_checkpoint(pretrained_checkpoint["model_state_dict"], strict=False)
+
 
     # Log files
     LOGGER.info(f"Using model {config_args['model']['name']}")
@@ -117,18 +129,23 @@ def main():
     )
     LOGGER.info(f"Saving logs in: {config_args['training']['output_folder']}")
 
+
     # Parallelize model
     nb_gpus = torch.cuda.device_count()
     if nb_gpus > 1:
         LOGGER.info(f"Parallelizing data to {nb_gpus} GPUs")
         learner.model = torch.nn.DataParallel(learner.model, device_ids=range(nb_gpus))
 
+
     # Set scheduler
     learner.set_scheduler()
+
 
     # Start training
     for epoch in range(start_epoch, config_args["training"]["nb_epochs"] + 1):
         learner.train(epoch)
+
+
 
 
 if __name__ == "__main__":
