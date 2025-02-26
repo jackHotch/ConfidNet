@@ -36,4 +36,5 @@ training:
 # Model parameters
 model:
     name: vgg16
-    resume: vgg16
+    resume: /content/output-cifar10/model_epoch_250.ckpt
+    uncertainty: /content/output-cifar10/model_epoch_250.ckpt
