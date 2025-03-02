@@ -7,7 +7,8 @@ import yaml
 
 
 def one_hot_embedding(labels, num_classes, device=None):
-    y = torch.eye(num_classes, device=labels.device)  # Move y to the same device as labels
+    device = labels.device
+    y = torch.eye(num_classes, device=device)  # Move y to the same device as labels
     return y[labels]
 
 
