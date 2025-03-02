@@ -1,0 +1,37 @@
+# Data parameters
+data:
+    dataset: mnist
+    data_dir: data/mnist-data
+    input_size: [28, 28]
+    input_channels: 1
+    num_classes: 10
+    valid_size: 0.1
+
+# Training parameters
+training:
+    output_folder: /content/output-confidnet/
+    task: classification
+    learner: selfconfid
+    nb_epochs: 200  # Reduce from 500 for faster convergence
+    batch_size: 128
+    loss:
+        name: selfconfid_mse
+        weighting: 1
+    optimizer:
+        name: adam
+        lr: 0.0001
+    lr_schedule:
+    ft_on_val: False
+    metrics: ['accuracy', 'auc', 'ap_success', 'ap_errors']
+    pin_memory: False
+    num_workers: 3
+    augmentations:
+        rotate: 15
+        normalize: [[0.1307], [0.3081]]  # Corrected for MNIST
+
+# Model parameters
+model:
+    name: mlp_selfconfid  # Ensure it's the right model
+    hidden_size: 1000
+    is_dropout: true
+    resume: /content/output-mnist/model_epoch_100.ckpt  # Update this to your trained model checkpoint
