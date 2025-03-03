@@ -157,13 +157,6 @@ class DefaultLearner(AbstractLeaner):
                   pred = probs.max(dim=1, keepdim=True)[1]
 
 
-              elif mode == "confidnet":
-                  output = self.model(data)
-                  loss += self.criterion(output, target)
-                  confidence = output[:, 1]  # Example: Assuming confidnet uses second output column
-                  pred = output.max(dim=1, keepdim=True)[1]
-
-
           if pred is None:
               raise RuntimeError("Variable 'pred' was not assigned a value during evaluation.")
        
