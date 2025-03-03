@@ -9,7 +9,7 @@ data:
 
 # Training parameters
 training:
-    output_folder: /home/docker_user/shared/ccorbiere/logs/test/cifar10_selfconfid
+    output_folder: /content/output-confidnet/
     task: classification
     learner: selfconfid
     nb_epochs: 500
@@ -36,5 +36,5 @@ training:
 # Model parameters
 model:
     name: vgg16_selfconfid_classic
-    resume: /home/docker_user/shared/ccorbiere/cifar10_pretrained/baseline/model_epoch_197.ckpt
+    resume: /content/output-cifar10/model_epoch_250.ckpt
     #uncertainty: /home/docker_user/shared/ccorbiere/logs/test/cifar10_selfconfid/model_epoch_005.ckpt
