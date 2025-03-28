@@ -12,7 +12,7 @@ training:
     output_folder: /content/fashionmnist_output/
     task: classification
     learner: default
-    nb_epochs: 100
+    nb_epochs: 110
     batch_size: 128
     loss:
         name: cross_entropy
