@@ -5,6 +5,15 @@ from confidnet.augmentations import get_composed_augmentations
 from confidnet.loaders.camvid_dataset import CamvidDataset
 from confidnet.loaders.loader import AbstractDataLoader
 
+class FashionMNISTLoader(AbstractDataLoader):
+    def load_dataset(self):
+        self.train_dataset = datasets.FashionMNIST(
+            root=self.data_dir, train=True, download=True, transform=self.augmentations_train
+        )
+        self.test_dataset = datasets.FashionMNIST(
+            root=self.data_dir, train=False, download=True, transform=self.augmentations_test
+        )
+
 
 class MNISTLoader(AbstractDataLoader):
     def load_dataset(self):
