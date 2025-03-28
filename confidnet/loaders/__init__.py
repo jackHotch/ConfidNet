@@ -13,6 +13,7 @@ def get_loader(config_args):
         "mnist": dload.MNISTLoader,
         "svhn": dload.SVHNLoader,
         "camvid": dload.CamVidLoader,
+        "fashionmnist": dload.FashionMNISTLoader,
     }
 
     return data_loader_factory[config_args['data']['dataset']](config_args=config_args)
