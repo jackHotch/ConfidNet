@@ -37,8 +37,8 @@ class ImagenetteLoader(AbstractDataLoader):
         #     └── val/
         #         ├── class1/
         #         └── ...
-        train_dir = os.path.join(self.data_dir, "imagenette/train")
-        val_dir = os.path.join(self.data_dir, "imagenette/val")
+        train_dir = os.path.join(self.data_dir, "data/train")
+        val_dir = os.path.join(self.data_dir, "data/val")
 
         # Load datasets using torchvision's ImageFolder
         self.train_dataset = ImageFolder(
