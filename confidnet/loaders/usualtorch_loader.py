@@ -14,6 +14,15 @@ class FashionMNISTLoader(AbstractDataLoader):
             root=self.data_dir, train=False, download=True, transform=self.augmentations_test
         )
 
+class ImagenetteLoader(AbstractDataLoader):
+    def load_dataset(self):
+        self.train_dataset = datasets.Imagenette(
+            root=self.data_dir, train=True, download=True, transform=self.augmentations_train
+        )
+        self.test_dataset = datasets.Imagenette(
+            root=self.data_dir, train=False, download=True, transform=self.augmentations_test
+        )
+
 
 class MNISTLoader(AbstractDataLoader):
     def load_dataset(self):
