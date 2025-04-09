@@ -1,0 +1,46 @@
+# Data parameters
+data:
+  dataset: cityscapes
+  data_dir: /datasets_local/cityscapes/
+  input_size: [512, 1024]
+  input_channels: 3
+  num_classes: 19 
+  valid_size: 0.1
+
+# Training parameters
+training:
+  output_folder: /content/output-cityscapes/
+  task: segmentation
+  learner: default
+  nb_epochs: 200
+  batch_size: 4 
+  loss:
+    name: cross_entropy
+  optimizer:
+    name: adam
+    lr: 0.001
+    #momentum: 0.9
+    #weight_decay: 0.0001
+  lr_schedule:
+    #name: multi_step
+    #milestones: [30, 80]
+  smoother: 0.1
+  metrics: ['accuracy', 'mean_iou']
+  pin_memory: False
+  num_workers: 8
+  augmentations:
+    #color_jitter: [0.4, 0.4, 0.4, 0]
+    #resize: 1024
+    #rotate: 10
+    hflip: True
+    #random_crop: [256, 512]
+    normalize: [[0.286, 0.325, 0.283], [0.176, 0.180, 0.177]] 
+
+# Model parameters
+model:
+  name: segnet
+  resume: vgg16
+  is_deconv: True
+  is_batchnorm: True
+  is_dropout: True
+  feature_scale: 4
