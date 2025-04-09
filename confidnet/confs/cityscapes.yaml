@@ -1,7 +1,7 @@
 # Data parameters
 data:
   dataset: cityscapes
-  data_dir: /datasets_local/cityscapes/
+  data_dir: /data/cityscapes-data/
   input_size: [512, 1024]
   input_channels: 3
   num_classes: 19 
