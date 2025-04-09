@@ -5,8 +5,8 @@ import os
 
 from confidnet.augmentations import get_composed_augmentations
 from confidnet.loaders.camvid_dataset import CamvidDataset
+from torchvision.datasets import Cityscapes
 from confidnet.loaders.loader import AbstractDataLoader
-
 
 class FashionMNISTLoader(AbstractDataLoader):
     def load_dataset(self):
