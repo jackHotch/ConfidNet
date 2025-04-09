@@ -1,10 +1,12 @@
 import torch
 from torchvision import datasets
+from torchvision.datasets import ImageFolder
 import os
 
 from confidnet.augmentations import get_composed_augmentations
 from confidnet.loaders.camvid_dataset import CamvidDataset
 from confidnet.loaders.loader import AbstractDataLoader
+
 
 class FashionMNISTLoader(AbstractDataLoader):
     def load_dataset(self):
@@ -15,17 +17,39 @@ class FashionMNISTLoader(AbstractDataLoader):
             root=self.data_dir, train=False, download=True, transform=self.augmentations_test
         )
 
+import torch
+from torchvision import datasets, transforms
+from torchvision.datasets import ImageFolder
+import os
+
+from confidnet.augmentations import get_composed_augmentations
+from confidnet.loaders.loader import AbstractDataLoader
+
+
 class ImagenetteLoader(AbstractDataLoader):
     def load_dataset(self):
+        # Expected directory structure:
+        # data_dir/
+        # └── imagenette/
+        #     ├── train/
+        #     │   ├── class1/
+        #     │   └── ...
+        #     └── val/
+        #         ├── class1/
+        #         └── ...
         train_dir = os.path.join(self.data_dir, "imagenette/train")
         val_dir = os.path.join(self.data_dir, "imagenette/val")
 
+        # Load datasets using torchvision's ImageFolder
         self.train_dataset = ImageFolder(
-            root=train_dir, transform=self.augmentations_train
+            root=train_dir,
+            transform=self.augmentations_train
         )
         self.test_dataset = ImageFolder(
-            root=val_dir, transform=self.augmentations_test
+            root=val_dir,
+            transform=self.augmentations_test
         )
+
 
 class CityscapesLoader(AbstractDataLoader):
      def add_augmentations(self):
