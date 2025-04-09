@@ -4,7 +4,7 @@ data:
   data_dir: /datasets_local/cityscapes/
   input_size: [512, 1024]
   input_channels: 3
-  num_classes: 19  # Standard number of classes for fine annotations
+  num_classes: 19 
   valid_size: 0.1
 
 # Training parameters
@@ -12,8 +12,8 @@ training:
   output_folder: /content/output-cityscapes/
   task: segmentation
   learner: default
-  nb_epochs: 500
-  batch_size: 4  # Cityscapes images are large; adjust based on GPU memory
+  nb_epochs: 200
+  batch_size: 4 
   loss:
     name: cross_entropy
   optimizer:
@@ -34,7 +34,7 @@ training:
     #rotate: 10
     hflip: True
     #random_crop: [256, 512]
-    normalize: [[0.286, 0.325, 0.283], [0.176, 0.180, 0.177]]  # Approx. ImageNet-like mean/std for Cityscapes
+    normalize: [[0.286, 0.325, 0.283], [0.176, 0.180, 0.177]] 
 
 # Model parameters
 model:
