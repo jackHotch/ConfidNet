@@ -1,5 +1,6 @@
 import torch
 from torchvision import datasets
+import os
 
 from confidnet.augmentations import get_composed_augmentations
 from confidnet.loaders.camvid_dataset import CamvidDataset
