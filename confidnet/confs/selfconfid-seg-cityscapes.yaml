@@ -9,11 +9,11 @@ data:
 
 # Training parameters
 training:
-    output_folder: /home/docker_user/shared/ccorbiere/logs/test/cityscapes_selfconfid
+    output_folder: /content/output-confidnet-cityscapes
     task: segmentation
     learner: selfconfid
-    nb_epochs: 500
-    batch_size: 2  # Cityscapes is heavy, so batch size is typically small
+    nb_epochs: 200
+    batch_size: 2
     loss:
         name: selfconfid_mse
         weighting: 1
@@ -35,8 +35,7 @@ training:
 # Model parameters
 model:
     name: segnet_selfconfid
-    resume: /home/docker_user/shared/ccorbiere/logs/test/cityscapes_baseline_pretrained/model_epoch_012.ckpt
-    #uncertainty: /home/docker_user/shared/ccorbiere/logs/test/cityscapes_selfconfid/model_epoch_002.ckpt
+    resume: /content/output-cityscapes/model_epoch_200.ckpt
     is_deconv: True
     is_batchnorm: True
     is_dropout: True
