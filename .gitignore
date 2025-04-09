@@ -13,5 +13,5 @@ ipython_config.py
 .idea/
 
 # Data folder
-data/
+
 notebooks/data/
