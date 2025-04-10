@@ -1,0 +1,39 @@
+# Data parameters
+data:
+  dataset: caltech101
+  data_dir: data/caltech101-data
+  input_size: [224, 224]  # resizing images to standard input size for VGG
+  input_channels: 3
+  num_classes: 102  # 101 classes + 1 background class
+  valid_size: 0.15  # using 15% validation as per your loader
+
+# Training parameters
+training:
+  output_folder: /content/output-caltech101/
+  task: classification
+  learner: default
+  nb_epochs: 250
+  batch_size: 64
+  loss:
+    name: cross_entropy
+  optimizer:
+    name: sgd
+    lr: 0.001
+    momentum: 0.9
+    weight_decay: 0.0005
+  lr_schedule:
+    #name: multi_step
+    #milestones: [50, 120, 200, 250]
+  metrics: ['accuracy', 'auc', 'ap_success', 'ap_errors']
+  pin_memory: False
+  num_workers: 3
+  augmentations:
+    hflip: True
+    rotate: 15
+    resize: [224, 224]
+    normalize: [[0.5, 0.5, 0.5], [0.5, 0.5, 0.5]]  # standard normalization
+
+# Model parameters
+model:
+  name: vgg16
+  resume: vgg16
