@@ -8,6 +8,53 @@ from confidnet.loaders.camvid_dataset import CamvidDataset
 from torchvision.datasets import Cityscapes
 from confidnet.loaders.loader import AbstractDataLoader
 
+class Caltech101Loader(AbstractDataLoader):
+    def load_dataset(self):
+        # Load the full dataset with train-time transforms
+        full_dataset = Caltech101(
+            root=self.data_dir,
+            download=True,
+            transform=self.augmentations_train,
+            target_type="category"
+        )
+
+        total_size = len(full_dataset)
+        train_size = int(0.7 * total_size)
+        val_size = int(0.15 * total_size)
+        test_size = total_size - train_size - val_size
+
+        # Split dataset
+        self.train_dataset, self.val_dataset, self.test_dataset = random_split(
+            full_dataset, [train_size, val_size, test_size]
+        )
+
+        # Override transforms for val and test sets
+        self.val_dataset.dataset.transform = self.augmentations_val
+        self.test_dataset.dataset.transform = self.augmentations_test
+
+    def make_loaders(self):
+        self.train_loader = torch.utils.data.DataLoader(
+            dataset=self.train_dataset,
+            batch_size=self.batch_size,
+            shuffle=True,
+            pin_memory=self.pin_memory,
+            num_workers=self.num_workers,
+        )
+        self.val_loader = torch.utils.data.DataLoader(
+            dataset=self.val_dataset,
+            batch_size=self.batch_size,
+            shuffle=False,
+            pin_memory=self.pin_memory,
+            num_workers=self.num_workers,
+        )
+        self.test_loader = torch.utils.data.DataLoader(
+            dataset=self.test_dataset,
+            batch_size=self.batch_size,
+            shuffle=False,
+            pin_memory=self.pin_memory,
+            num_workers=self.num_workers,
+        )
+
 class FashionMNISTLoader(AbstractDataLoader):
     def load_dataset(self):
         self.train_dataset = datasets.FashionMNIST(
@@ -49,81 +96,6 @@ class ImagenetteLoader(AbstractDataLoader):
             root=val_dir,
             transform=self.augmentations_test
         )
-
-
-class CityscapesLoader(AbstractDataLoader):
-     def add_augmentations(self):
-         self.augmentations_train = get_composed_augmentations(
-             self.augmentations, training="segmentation"
-         )
-         self.augmentations_val = get_composed_augmentations(
-             {
-                 key: self.augmentations[key]
-                 for key in self.augmentations
-                 if key in ["normalize", "resize"]
-             },
-             verbose=False,
-             training="segmentation",
-         )
-         self.augmentations_test = get_composed_augmentations(
-             {key: self.augmentations[key] for key in self.augmentations if key == "normalize"},
-             verbose=False,
-             training="segmentation",
-         )
- 
-     def load_dataset(self):
-         target_type = "semantic"  # Can also be "instance" or a list like ["semantic", "instance"]
- 
-         self.train_dataset = Cityscapes(
-             root=self.data_dir,
-             split="train",
-             mode="fine",
-             target_type=target_type,
-             transform=self.augmentations_train,
-             target_transform=self.augmentations_train,
-         )
- 
-         self.val_dataset = Cityscapes(
-             root=self.data_dir,
-             split="val",
-             mode="fine",
-             target_type=target_type,
-             transform=self.augmentations_val,
-             target_transform=self.augmentations_val,
-         )
- 
-         self.test_dataset = Cityscapes(
-             root=self.data_dir,
-             split="test",
-             mode="fine",
-             target_type=target_type,
-             transform=self.augmentations_test,
-             target_transform=self.augmentations_test,
-         )
- 
-     def make_loaders(self):
-         self.train_loader = torch.utils.data.DataLoader(
-             dataset=self.train_dataset,
-             batch_size=self.batch_size,
-             shuffle=True,
-             pin_memory=self.pin_memory,
-             num_workers=self.num_workers,
-         )
-         self.val_loader = torch.utils.data.DataLoader(
-             dataset=self.val_dataset,
-             batch_size=self.batch_size,
-             shuffle=False,
-             pin_memory=self.pin_memory,
-             num_workers=self.num_workers,
-         )
-         self.test_loader = torch.utils.data.DataLoader(
-             dataset=self.test_dataset,
-             batch_size=self.batch_size,
-             shuffle=False,
-             pin_memory=self.pin_memory,
-             num_workers=self.num_workers,
-         )
- 
 
 
 class MNISTLoader(AbstractDataLoader):
