@@ -5,7 +5,8 @@ import os
 
 from confidnet.augmentations import get_composed_augmentations
 from confidnet.loaders.camvid_dataset import CamvidDataset
-from torchvision.datasets import Cityscapes
+from torchvision.datasets import Caltech101
+from torch.utils.data import random_split
 from confidnet.loaders.loader import AbstractDataLoader
 
 class Caltech101Loader(AbstractDataLoader):
