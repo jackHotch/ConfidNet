@@ -16,6 +16,7 @@ def get_loader(config_args):
         "fashionmnist": dload.FashionMNISTLoader,
         "imagenette": dload.ImagenetteLoader,
         "caltech101": dload.Caltech101Loader,
+        "stl10": dload.STL10Loader,
     }
 
     return data_loader_factory[config_args['data']['dataset']](config_args=config_args)
