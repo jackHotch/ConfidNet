@@ -1,0 +1,39 @@
+# Data parameters
+data:
+  dataset: stl10
+  data_dir: data/stl10-data
+  input_size: [96, 96]
+  input_channels: 3
+  num_classes: 10
+  valid_size: 0.15
+
+# Training parameters
+training:
+  output_folder: /content/output-stl10-confidnet/
+  task: classification
+  learner: selfconfid
+  nb_epochs: 200
+  batch_size: 128
+  loss:
+    name: selfconfid_mse
+    weighting: 1
+  optimizer:
+    name: adam
+    lr: 0.0001
+    #momentum: 0.9
+    #weight_decay: 0.0001
+  lr_schedule:
+  ft_on_val: False
+  metrics: ['accuracy', 'auc', 'ap_success', 'ap_errors']
+  pin_memory: False
+  num_workers: 3
+  augmentations:
+    hflip: True
+    rotate: 15
+    resize: 96
+    normalize: [[0.4467, 0.4398, 0.4066], [0.2241, 0.2215, 0.2239]] # STL-10 mean & std
+
+# Model parameters
+model:
+  name: vgg16_selfconfid_classic
+  resume: /content/output-stl10/model_epoch_250.ckpt

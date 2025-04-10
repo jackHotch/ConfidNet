@@ -38,54 +38,7 @@ class STL10Loader(AbstractDataLoader):
         )
 
         # Override transforms for val/test
-        self.val_dataset.dataset.transform = self.augmentations_val
-        self.test_dataset.dataset.transform = self.augmentations_test
-
-    def make_loaders(self):
-        self.train_loader = torch.utils.data.DataLoader(
-            dataset=self.train_dataset,
-            batch_size=self.batch_size,
-            shuffle=True,
-            pin_memory=self.pin_memory,
-            num_workers=self.num_workers,
-        )
-        self.val_loader = torch.utils.data.DataLoader(
-            dataset=self.val_dataset,
-            batch_size=self.batch_size,
-            shuffle=False,
-            pin_memory=self.pin_memory,
-            num_workers=self.num_workers,
-        )
-        self.test_loader = torch.utils.data.DataLoader(
-            dataset=self.test_dataset,
-            batch_size=self.batch_size,
-            shuffle=False,
-            pin_memory=self.pin_memory,
-            num_workers=self.num_workers,
-        )
-
-class Caltech101Loader(AbstractDataLoader):
-    def load_dataset(self):
-        # Load the full dataset with train-time transforms
-        full_dataset = Caltech101(
-            root=self.data_dir,
-            download=True,
-            transform=self.augmentations_train,
-            target_type="category"
-        )
-
-        total_size = len(full_dataset)
-        train_size = int(0.7 * total_size)
-        val_size = int(0.15 * total_size)
-        test_size = total_size - train_size - val_size
-
-        # Split dataset
-        self.train_dataset, self.val_dataset, self.test_dataset = random_split(
-            full_dataset, [train_size, val_size, test_size]
-        )
-
-        # Override transforms for val and test sets
-        self.val_dataset.dataset.transform = self.augmentations_val
+        self.val_dataset.dataset.transform = self.augmentations
         self.test_dataset.dataset.transform = self.augmentations_test
 
     def make_loaders(self):

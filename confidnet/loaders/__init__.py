@@ -15,7 +15,6 @@ def get_loader(config_args):
         "camvid": dload.CamVidLoader,
         "fashionmnist": dload.FashionMNISTLoader,
         "imagenette": dload.ImagenetteLoader,
-        "caltech101": dload.Caltech101Loader,
         "stl10": dload.STL10Loader,
     }
 
