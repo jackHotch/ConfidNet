@@ -8,7 +8,7 @@ data:
 
 # Training parameters
 training:
-    output_folder: /content/vgg16
+    output_folder: /content/output-eurosat
     task: classification
     learner: default
     nb_epochs: 50
