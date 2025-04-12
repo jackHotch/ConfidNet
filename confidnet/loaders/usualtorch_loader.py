@@ -5,10 +5,31 @@ import os
 
 from confidnet.augmentations import get_composed_augmentations
 from confidnet.loaders.camvid_dataset import CamvidDataset
-from torchvision.datasets import Caltech101
+from torchvision.datasets import EuroSAT
 from torchvision.datasets import STL10
 from torch.utils.data import random_split
 from confidnet.loaders.loader import AbstractDataLoader
+
+class EuroSATLoader(AbstractDataLoader):
+    def load_dataset(self):
+        self.augmentations_train = transforms.Compose([
+            transforms.Resize((64, 64)),  # Resize to 64x64
+            transforms.ToTensor(),
+            # Add any other augmentation steps you want here, like random crop or horizontal flip
+        ])
+
+
+        self.augmentations_test = transforms.Compose([
+            transforms.Resize((64, 64)),  # Resize to 64x64
+            transforms.ToTensor(),
+        ])
+       
+        self.train_dataset = EuroSAT(
+            root=self.data_dir, download=True, transform=self.augmentations_train
+        )
+        self.test_dataset = EuroSAT(
+            root=self.data_dir, download=True, transform=self.augmentations_test
+        )
 
 class STL10Loader(AbstractDataLoader):
     def load_dataset(self):
