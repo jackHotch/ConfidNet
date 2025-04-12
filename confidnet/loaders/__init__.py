@@ -16,6 +16,7 @@ def get_loader(config_args):
         "fashionmnist": dload.FashionMNISTLoader,
         "imagenette": dload.ImagenetteLoader,
         "stl10": dload.STL10Loader,
+        "eurosat": dload.EuroSATLoader,
     }
 
     return data_loader_factory[config_args['data']['dataset']](config_args=config_args)
