@@ -1,0 +1,37 @@
+# Data parameters
+data:
+  dataset: eurosat
+  data_dir: data/eurosat
+  input_size: [64, 64]  # original image size; resize will be applied in augmentations
+  input_channels: 3
+  num_classes: 10
+  valid_size: 0.1
+
+# Training parameters
+training:
+  output_folder: /content/output-eurosat-confidnet/
+  task: classification
+  learner: selfconfid
+  nb_epochs: 100
+  batch_size: 64
+  loss:
+    name: selfconfid_mse
+    weighting: 1
+  optimizer:
+    name: adam
+    lr: 0.0001
+  lr_schedule:
+  ft_on_val: False
+  metrics: ['accuracy', 'auc', 'ap_success', 'ap_errors']
+  pin_memory: False
+  num_workers: 4
+  augmentations:
+    resize: [224, 224]
+    hflip: True
+    normalize: [[0.485, 0.456, 0.406], [0.229, 0.224, 0.225]]
+
+# Model parameters
+model:
+  name: vgg16_selfconfid_classic
+  resume: /content/output-eurosat/model_epoch_50.ckpt
+  #uncertainty: /path/to/uncertainty/model.ckpt  # optional, if you pre-trained the uncertainty head
