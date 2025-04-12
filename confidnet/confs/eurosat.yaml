@@ -1,0 +1,40 @@
+data:
+    dataset: eurosat
+    data_dir: data/eurosat
+    input_size: [64, 64]
+    input_channels: 3
+    num_classes: 10
+    valid_size: 0.1
+
+# Training parameters
+training:
+    output_folder: /content/vgg16
+    task: classification
+    learner: default
+    nb_epochs: 50
+    batch_size: 64
+    loss:
+        name: cross_entropy
+    optimizer:
+        name: sgd
+        lr: 0.01
+        momentum: 0.9
+        weight_decay: 0.0001
+    lr_schedule:
+        name: multi_step
+        milestones: [20, 35]
+    smoother: 0.1
+    metrics: ['accuracy', 'auc', 'ap_success', 'ap_errors']
+    pin_memory: False
+    num_workers: 4
+    augmentations:
+        resize: [224, 224]
+        hflip: True
+        normalize: [[0.485, 0.456, 0.406], [0.229, 0.224, 0.225]]
+
+# Model parameters
+model:
+    name: vgg16
+    resume:
+    pretrained: True
+    is_dropout: True
