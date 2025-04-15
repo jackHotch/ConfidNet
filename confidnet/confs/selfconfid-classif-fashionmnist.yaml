@@ -33,4 +33,4 @@ model:
     name: mlp_selfconfid  # Ensure it's the correct model for FashionMNIST
     hidden_size: 1000
     is_dropout: true
-    resume: /content/fashionmnist_output/model_epoch_110.ckpt  # Update with actual checkpoint path
+    resume: /content/output-fashionmnist/model_epoch_110.ckpt  # Update with actual checkpoint path
