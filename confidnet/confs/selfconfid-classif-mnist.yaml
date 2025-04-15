@@ -9,7 +9,7 @@ data:
 
 # Training parameters
 training:
-    output_folder: /content/output-confidnet/
+    output_folder: /content/output-confidnet-mnist/
     task: classification
     learner: selfconfid
     nb_epochs: 200  # Reduce from 500 for faster convergence
