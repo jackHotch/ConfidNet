@@ -27,6 +27,8 @@ from confidnet.models.vgg16_extractor import VGG16Extractor
 from confidnet.models.vgg16_oodconfid import VGG16OODConfid
 from confidnet.models.vgg16_selfconfid_classic import VGG16SelfConfidClassic
 from confidnet.models.vgg16_selfconfid_cloning import VGG16SelfConfidCloning
+from confidnet.models.vgg16_stl10 import VGG16STL10
+from confidnet.models.vgg16_extractor_stl10 import VGG16STL10Extractor
 
 
 def get_model(config_args, device):
@@ -56,6 +58,9 @@ def get_model(config_args, device):
         "vgg16_selfconfid_classic": VGG16SelfConfidClassic,
         "vgg16_selfconfid_cloning": VGG16SelfConfidCloning,
         "vgg16_oodconfid": VGG16OODConfid,
+        "vgg16_stl10": VGG16STL10,
+        "vgg16_extractor": VGG16STL10Extractor,
+        "vgg16_selfconfid_classic_stl10": VGG16STL10SelfConfidClassic
         "segnet": Segnet,
         "segnet_extractor": SegnetExtractor,
         "segnet_selfconfid": SegnetSelfConfid,
