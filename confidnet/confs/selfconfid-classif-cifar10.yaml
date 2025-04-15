@@ -9,7 +9,7 @@ data:
 
 # Training parameters
 training:
-  output_folder: /content/output-confidnet/
+  output_folder: /content/output-confidnet-cifar10/
   task: classification
   learner: selfconfid
   nb_epochs: 100
