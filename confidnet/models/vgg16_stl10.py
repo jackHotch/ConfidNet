@@ -21,7 +21,7 @@ class Conv2dSame(nn.Module):
         return self.net(x)
 
 
-class VGG16(AbstractModel):
+class VGG16STL10(AbstractModel):
     def __init__(self, config_args, device):
         super().__init__(config_args, device)
         self.conv1 = Conv2dSame(config_args["data"]["input_channels"], 64, 3)
