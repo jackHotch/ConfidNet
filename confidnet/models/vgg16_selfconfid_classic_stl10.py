@@ -5,7 +5,7 @@ from confidnet.models.model import AbstractModel
 from confidnet.models.vgg16 import Conv2dSame
 
 
-class VGG16SelfConfidClassic(AbstractModel):
+class VGG16STL10SelfConfidClassic(AbstractModel):
     def __init__(self, config_args, device):
         super().__init__(config_args, device)
         self.conv1 = Conv2dSame(config_args["data"]["input_channels"], 64, 3)
